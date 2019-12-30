@@ -22,22 +22,29 @@ var args = CommandLine.arguments
 // Error
 class Error {
     var errorName = ""
+    var errorType = ""
     var errorBio = ""
     var locationStart = ""
     var locationEnd = ""
-    init(errorName:String, errorBio:String? = "", locationStart:String? = "", locationEnd:String? = "") {
+    init(errorName:String, errorType:String? = "error", errorBio:String? = "", locationStart:String? = "", locationEnd:String? = "") {
         self.errorName = errorName
+        self.errorType = errorType ?? "error"
         self.errorBio = errorBio ?? ""
         self.locationStart = locationStart ?? ""
         self.locationEnd = locationEnd ?? ""
     }
     func repr() -> String{
-        var output = "📕 Error: "
+        var output = ""
+        if(self.errorType == "error") {output = "📕 Error: "} else if(self.errorType == "warning") {output = "📙 Warning: "} else {unknownErrorType();return ""}
         output += self.errorName + ", "
         if(self.locationStart != "") {output += self.locationStart + ", "}
         if(self.locationEnd != "") {output += self.locationEnd + ", "}
         if(self.errorBio != "") {output += self.errorBio + ""}
         return output
+    }
+    func unknownErrorType() {
+        let output = Error(errorName: "Unknown error type", errorType: "error", errorBio: "Unknown error type '" + self.errorType + "'.", locationStart: "main.swift").repr()
+        print(output)
     }
 }
 
@@ -93,10 +100,8 @@ func shell() {
 
 // Run Shell
 if(args.indices.contains(1)) {
-    let rese = Token(type: "INT", value: "3").out()
-    print(rese)
-    let result = Error(errorName: "Unknown File", errorBio: "There is no file named " + args[1] + " in that location.", locationStart: "shell 1:1").repr()
-    print(result)
+    let output = Error(errorName: "Unknown file", errorType: "error", errorBio: "There is no file named '" + args[1] + "' in that location.", locationStart: "shellInput")
+    print(output.repr())
 } else {
     shell()
 }
