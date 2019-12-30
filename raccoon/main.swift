@@ -56,6 +56,9 @@ class Token {
         self.type = type
         self.value = value ?? ""
     }
+    func out() -> [String] {
+        return [self.type, self.value]
+    }
     func repr() -> String {
         if(self.value != "") {
             return self.type + ":" + self.value
@@ -90,6 +93,8 @@ func shell() {
 
 // Run Shell
 if(args.indices.contains(1)) {
+    let rese = Token(type: "INT", value: "3").out()
+    print(rese)
     let result = Error(errorName: "Unknown File", errorBio: "There is no file named " + args[1] + " in that location.", locationStart: "shell 1:1").repr()
     print(result)
 } else {
